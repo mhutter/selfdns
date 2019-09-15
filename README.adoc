@@ -13,6 +13,19 @@ Configuration is done via ENV vars:
 
 The Google Cloud Service Account only needs the "DNS Admin" role.
 
+
+== Development
+
+    gin --immediate
+
+gin `.env` template:
+
+    DOMAIN=home.example.com
+    GOOGLE_APPLICATION_CREDENTIALS=./gcloud-sa.json
+    GOOGLE_PROJECT=example-project
+    GOOGLE_ZONE=example-com
+
+
 == Reference
 
 * https://github.com/googleapis/google-api-go-client

@@ -1,0 +1,11 @@
+*.json
+.dockerignore
+.env
+.git
+.gitignore
+.gitignore
+Dockerfile
+LICENSE
+README.md
+gin-bin
+selfdns

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"io/ioutil"
 	"log"
 	"net"
@@ -18,16 +19,22 @@ const (
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	flag.DurationVar(
+		&http.DefaultClient.Timeout,
+		"timeout",
+		5*time.Second,
+		"Timeout for outgoing HTTP Requests",
+	)
+
+	flag.Parse()
 }
 
 func main() {
 	//
 	// Determine own IP from external service
 	//
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
-	res, err := client.Get(ipURL)
+	res, err := http.Get(ipURL)
 	check(err)
 
 	defer res.Body.Close()

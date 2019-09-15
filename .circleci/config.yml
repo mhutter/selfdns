@@ -4,6 +4,8 @@ jobs:
   image: &image
     docker:
       - image: circleci/buildpack-deps:latest
+    environment: &env
+      image: docker.io/mhutter/selfdns
     steps:
       - checkout
       - setup_remote_docker
@@ -24,20 +26,20 @@ jobs:
   image_amd64:
     <<: *image
     environment:
-      image: mhutter/selfdns
+      <<: *env
       arch: amd64
 
   image_arm:
     <<: *image
     environment:
-      image: mhutter/selfdns
+      <<: *env
       arch: arm
 
   manifest:
     docker:
       - image: circleci/buildpack-deps:latest
     environment:
-      image: mhutter/selfdns
+      <<: *env
     steps:
       - setup_remote_docker
       - run:

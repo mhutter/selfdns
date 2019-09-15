@@ -1,5 +1,7 @@
 = selfdns
 
+image:https://circleci.com/gh/mhutter/selfdns.svg?style=svg["CircleCI", link="https://circleci.com/gh/mhutter/selfdns"]
+
 Determine own IP and update a DNS record if required
 
 == Usage

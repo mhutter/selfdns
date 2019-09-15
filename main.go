@@ -23,7 +23,7 @@ func init() {
 	flag.DurationVar(
 		&http.DefaultClient.Timeout,
 		"timeout",
-		5*time.Second,
+		10*time.Second,
 		"Timeout for outgoing HTTP Requests",
 	)
 

@@ -1,0 +1,78 @@
+---
+version: 2
+jobs:
+  image: &image
+    docker:
+      - image: circleci/buildpack-deps:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Docker build
+          command: |
+            docker build -t "${image}:${CIRCLE_SHA1:0:7}-${arch}" \
+              -f "Dockerfile.${arch}" .
+      - run: &docker_login
+          name: Log in to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | \
+            docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - run:
+          name: Push to Docker Hub
+          command: docker push "${image}:${CIRCLE_SHA1:0:7}-${arch}"
+
+  image_amd64:
+    <<: *image
+    environment:
+      image: mhutter/selfdns
+      arch: amd64
+
+  image_arm:
+    <<: *image
+    environment:
+      image: mhutter/selfdns
+      arch: arm
+
+  manifest:
+    docker:
+      - image: circleci/buildpack-deps:latest
+    environment:
+      image: mhutter/selfdns
+    steps:
+      - setup_remote_docker
+      - run:
+          <<: *docker_login
+      - run:
+          name: Create tag manifest
+          command: |
+            docker manifest create "${image}:${CIRCLE_SHA1:0:7}" \
+              "{image}:${CIRCLE_SHA1:0:7}-amd64" \
+              "{image}:${CIRCLE_SHA1:0:7}-arm"
+            docker manifest annotate --arch arm "${image}:${CIRCLE_SHA1:0:7}" \
+              "{image}:${CIRCLE_SHA1:0:7}-arm"
+            docker manifest push --prune "${image}:${CIRCLE_SHA1:0:7}"
+      - run:
+          name: Create latest manifest
+          command: |
+            docker manifest create "${image}:latest" \
+              "{image}:${CIRCLE_SHA1:0:7}-amd64" \
+              "{image}:${CIRCLE_SHA1:0:7}-arm"
+            docker manifest annotate --arch arm "${image}:latest" \
+              "{image}:${CIRCLE_SHA1:0:7}-arm"
+            docker manifest push --prune "${image}:latest"
+
+workflows:
+  version: 2
+  images:
+    jobs:
+      - image_amd64: &master_only
+          filter:
+            branches:
+              only: master
+      - image_arm:
+          <<: *master_only
+      - manifest:
+          <<: *master_only
+          requires:
+            - image_amd64
+            - image_arm

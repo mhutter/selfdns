@@ -1,0 +1,28 @@
+= selfdns
+
+Determine own IP and update a DNS record if required
+
+== Usage
+
+Configuration is done via ENV vars:
+
+* `DOMAIN` (*required*) - Target domain to use
+* `GOOGLE_APPLICATION_CREDENTIALS` (*required*) - Path to Google Cloud Service Account JSON file
+* `GOOGLE_PROJECT` (*required*) - Name of the Google Cloud Project to use
+* `GOOGLE_ZONE` (*required*) - Name of the Google Cloud managed DNS zone to use
+
+The Google Cloud Service Account only needs the "DNS Admin" role.
+
+== Reference
+
+* https://github.com/googleapis/google-api-go-client
+
+
+== License
+
+MIT (see link:LICENSE[LICENSE])
+
+---
+> https://hutter.io/[Manuel Hutter] -
+> GitHub https://github.com/mhutter[@mhutter] -
+> Twitter https://twitter.com/dratir[@dratir]

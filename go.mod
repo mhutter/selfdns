@@ -2,4 +2,4 @@ module github.com/mhutter/selfdns
 
 go 1.13
 
-require google.golang.org/api v0.11.0
+require google.golang.org/api v0.13.0
